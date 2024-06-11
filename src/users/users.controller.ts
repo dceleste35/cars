@@ -1,20 +1,27 @@
-import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import createUserDto from 'src/dtos/createUserDto';
 import updateUserDto from 'src/dtos/updateUserDto';
 import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
+import { AuthService } from './auth.service';
+import loginUserDto from 'src/dtos/loginUserDto';
 
 @Controller('users')
 export class UsersController {
 
-    constructor(private readonly userService: UsersService) {}
+    constructor(private readonly userService: UsersService, private readonly authService: AuthService) {}
 
     @Post('/signup')
-    async createUser(@Body() body: createUserDto) {
+    async signup(@Body() body: createUserDto) {
         if(await this.userService.findByEmail(body.email))
             throw new BadRequestException(`User with email ${body.email} already exists`);
 
-        return await this.userService.create(body.email, body.password);
+        return await this.authService.signup(body.email, body.password);
+    }
+
+    @Post('/login')
+    async login(@Body() body: loginUserDto) {
+        return await this.authService.login(body);
     }
 
     @Patch('/:id')
@@ -36,17 +43,14 @@ export class UsersController {
         return user;
     }
 
-    @Get('/email/:email')
-    async findByEmail(@Param('email') email: string) {
-        const user = await this.userService.findByEmail(email);
-        if(!user)
-            throw new NotFoundException(`User with email ${email} not found`);
-
-        return user;
-    }
-
     @Get('/')
-    async findAll() {
+    @UseInterceptors(SerializeInterceptor)
+    async find(@Query('email') email: string) {
+        if(email) {
+            var user = await this.userService.findByEmail(email);
+            return user;
+        }
+
         return await this.userService.findAll();
     }
 
