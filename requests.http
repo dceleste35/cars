@@ -1,0 +1,37 @@
+### CREATE User
+POST http://localhost:3000/users/signup
+content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
+
+### LOGIN User
+POST http://localhost:3000/users/login
+content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
+
+### GET User by ID
+GET http://localhost:3000/users/11
+
+### UPDATE User by ID
+PATCH http://localhost:3000/users/11
+content-type: application/json
+
+{
+    "email": "test1@test.com"
+}
+
+### DELETE User by ID
+DELETE http://localhost:3000/users/12
+
+### GET All Users
+GET http://localhost:3000/users
+
+### GET User by Email
+GET http://localhost:3000/users?email=test@test.com
