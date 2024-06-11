@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import UserDTO from 'src/dtos/UserDTO';
 import { UsersService } from './users.service';
 
@@ -8,18 +8,12 @@ export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
     @Post('/signup')
-    async createUser(@Body() body: UserDTO){
-        if(await this.userService.findByEmail(body.email))
-            throw new BadRequestException('User already exists');
-
+    async createUser(@Body() body: UserDTO) {
         return this.userService.create(body.email, body.password);
     }
 
     @Get('/:id')
     async findById(@Param('id') id: number) {
-        if(! await this.userService.findById(id))
-            throw new NotFoundException('User not found');
-
         return await this.userService.findById(id);
     }
 
