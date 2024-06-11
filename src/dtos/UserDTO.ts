@@ -5,6 +5,5 @@ export default class UserDTO {
     email: string;
 
     @IsString()
-    @IsNotEmpty()
     password: string;
 }
