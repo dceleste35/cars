@@ -1,4 +1,4 @@
-import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Session, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import createUserDto from 'src/dtos/createUserDto';
 import updateUserDto from 'src/dtos/updateUserDto';
@@ -58,4 +58,14 @@ export class UsersController {
     async deleteUser(@Param('id') id: number) {
         return await this.userService.delete(id);
     }
+
+    // @Get('/colors')
+    // getColor(@Session() session: any) {
+    //     return session.color;
+    // }
+
+    // @Get('/colors/:color')
+    // setColor(@Param('color') color: string, @Session() session: any) {
+    //     session.color = color;
+    // }
 }
