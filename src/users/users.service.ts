@@ -9,8 +9,6 @@ export class UsersService {
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
     async create(email: string, password: string) {
-        if (await this.findByEmail(email))
-             new BadRequestException('User already exists');
 
         const user = await this.userRepository.create({ email, password });
         return this.userRepository.save(user);
@@ -18,16 +16,12 @@ export class UsersService {
 
     async findById(id: number) {
         const user = await this.userRepository.findOneBy({ id });
-        if (!user)
-            throw new NotFoundException('User not found');
 
         return user;
     }
 
     async findByEmail(email: string) {
         const user = await this.userRepository.findOneBy({ email });
-        if (!user)
-            throw new NotFoundException('User not found');
 
         return user;
     }
