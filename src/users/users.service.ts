@@ -8,7 +8,7 @@ export class UsersService {
 
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-    async create(email: string, password: string): Promise<User> {
+    async create(email: string, password: string) {
         if (await this.findByEmail(email))
              new BadRequestException('User already exists');
 
@@ -16,7 +16,7 @@ export class UsersService {
         return this.userRepository.save(user);
     }
 
-    async findById(id: number): Promise<User> {
+    async findById(id: number) {
         const user = await this.userRepository.findOneBy({ id });
         if (!user)
             throw new NotFoundException('User not found');
@@ -24,7 +24,7 @@ export class UsersService {
         return user;
     }
 
-    async findByEmail(email: string): Promise<User> {
+    async findByEmail(email: string) {
         const user = await this.userRepository.findOneBy({ email });
         if (!user)
             throw new NotFoundException('User not found');
@@ -36,15 +36,17 @@ export class UsersService {
         return this.userRepository.find();
     }
 
-    async update(id: number, body: updateUserDto): Promise<User> {
+    async update(id: number, body: Partial<User>) {
         const user = await this.findById(id);
         Object.assign(user, body);
 
         return this.userRepository.save(user);
     }
 
-    async delete(id: number): Promise<void> {
+    async delete(id: number) {
         const user = await this.findById(id);
         await this.userRepository.remove(user);
+
+        return `User ${id} deleted successfully`;
     }
 }
