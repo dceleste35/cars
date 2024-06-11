@@ -41,4 +41,9 @@ export class UsersService {
         user.password = password;
         return this.userRepository.save(user);
     }
+
+    async delete(id: number): Promise<void> {
+        const user = await this.findById(id);
+        await this.userRepository.remove(user);
+    }
 }
