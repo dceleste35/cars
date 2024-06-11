@@ -8,11 +8,11 @@ import loginUserDto from 'src/dtos/loginUserDto';
 @Injectable()
 export class AuthService {
 
-    constructor(@InjectRepository(User) private authRepository: Repository<User>, private readonly usersService: UsersService) {}
+    constructor(private readonly usersService: UsersService) {}
 
     async signup(email: string, password: string) {
-        const user = await this.authRepository.create({ email, password });
-        return this.authRepository.save(user);
+        const user = await this.usersService.create({ email, password });
+        return user;
     }
 
     async login(loginUserDto: loginUserDto) {

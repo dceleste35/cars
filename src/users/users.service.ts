@@ -8,6 +8,11 @@ export class UsersService {
 
     constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
+    async create(email: string, password: string) {
+        const user = await this.userRepository.create({ email, password });
+        return this.userRepository.save(user);
+    }
+
     async findById(id: number) {
         const user = await this.userRepository.findOneBy({ id });
 
