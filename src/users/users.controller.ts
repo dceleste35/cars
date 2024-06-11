@@ -13,7 +13,7 @@ export class UsersController {
     }
 
     @Post('/:id')
-    async updateUser(@Param('id') id: number, @Body() body: UserDTO) {
+    async updateUser(@Param('id') id: number, @Body() body: any) {
         return this.userService.update(id, body.email, body.password);
     }
 
