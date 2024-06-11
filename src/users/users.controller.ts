@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import createUserDto from 'src/dtos/createUserDto';
 import updateUserDto from 'src/dtos/updateUserDto';
@@ -10,15 +10,16 @@ export class UsersController {
 
     @Post('/signup')
     async createUser(@Body() body: createUserDto) {
-        return this.userService.create(body.email, body.password);
+        return await this.userService.create(body.email, body.password);
     }
 
     @Patch('/:id')
     async updateUser(@Param('id') id: number, @Body() body: updateUserDto) {
-        return this.userService.update(id, body);
+        return await this.userService.update(id, body);
     }
 
     @Get('/:id')
+    @UseInterceptors(ClassSerializerInterceptor)
     async findById(@Param('id') id: number) {
         return await this.userService.findById(id);
     }
@@ -29,12 +30,12 @@ export class UsersController {
     }
 
     @Get('/')
-    findAll() {
-        return this.userService.findAll();
+    async findAll() {
+        return await this.userService.findAll();
     }
 
     @Delete('/:id')
     async deleteUser(@Param('id') id: number) {
-        return this.userService.delete(id);
+        return await this.userService.delete(id);
     }
 }
