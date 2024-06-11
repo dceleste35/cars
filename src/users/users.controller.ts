@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import UserDTO from 'src/dtos/UserDTO';
 import { UsersService } from './users.service';
+import createUserDto from 'src/dtos/createUserDto';
+import updateUserDto from 'src/dtos/updateUserDto';
 
 @Controller('users')
 export class UsersController {
@@ -8,13 +9,13 @@ export class UsersController {
     constructor(private readonly userService: UsersService) {}
 
     @Post('/signup')
-    async createUser(@Body() body: UserDTO) {
+    async createUser(@Body() body: createUserDto) {
         return this.userService.create(body.email, body.password);
     }
 
     @Post('/:id')
-    async updateUser(@Param('id') id: number, @Body() body: any) {
-        return this.userService.update(id, body.email, body.password);
+    async updateUser(@Param('id') id: number, @Body() body: updateUserDto) {
+        return this.userService.update(id, body);
     }
 
     @Get('/:id')
