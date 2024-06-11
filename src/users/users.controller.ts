@@ -12,9 +12,19 @@ export class UsersController {
         return this.userService.create(body.email, body.password);
     }
 
+    @Post('/:id')
+    async updateUser(@Param('id') id: number, @Body() body: UserDTO) {
+        return this.userService.update(id, body.email, body.password);
+    }
+
     @Get('/:id')
     async findById(@Param('id') id: number) {
         return await this.userService.findById(id);
+    }
+
+    @Get('/email/:email')
+    async findByEmail(@Param('email') email: string) {
+        return await this.userService.findByEmail(email);
     }
 
     @Get('/')

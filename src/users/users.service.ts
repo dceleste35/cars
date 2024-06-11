@@ -34,4 +34,11 @@ export class UsersService {
     findAll() {
         return this.userRepository.find();
     }
+
+    async update(id: number, email: string, password: string): Promise<User> {
+        const user = await this.findById(id);
+        user.email = email;
+        user.password = password;
+        return this.userRepository.save(user);
+    }
 }
