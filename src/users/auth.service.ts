@@ -32,13 +32,13 @@ export class AuthService {
 
         const user = await this.usersService.findByEmail(email);
         if (!user)
-            throw new BadRequestException(`User with email ${email} not found`);
+            throw new NotFoundException(`User with email ${email} not found`);
 
         const [salt, storedHash] = user.password.split('.');
         const hash = (await scrypt(password, salt, 32)) as Buffer;
-        const result = salt + '.' + hash.toString('hex');
+        const result = hash.toString('hex');
 
-        if (result !== user.password)
+        if (result !== storedHash)
             throw new BadRequestException('Invalid password');
 
         return user;
