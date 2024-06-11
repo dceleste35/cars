@@ -2,6 +2,7 @@ import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Dele
 import { UsersService } from './users.service';
 import createUserDto from 'src/dtos/createUserDto';
 import updateUserDto from 'src/dtos/updateUserDto';
+import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
 
 @Controller('users')
 export class UsersController {
@@ -25,7 +26,7 @@ export class UsersController {
     }
 
     @Get('/:id')
-    @UseInterceptors(ClassSerializerInterceptor)
+    @UseInterceptors(SerializeInterceptor)
     async findById(@Param('id') id: number) {
         const user = await this.userService.findById(id)
         if(!user)
