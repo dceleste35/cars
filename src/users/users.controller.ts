@@ -30,6 +30,22 @@ export class UsersController {
         return user;
     }
 
+    @Post('/logout')
+    async logout(@Session() session: any) {
+        if (session.userId == null)
+            throw new BadRequestException(`User is not logged in`);
+
+        session.userId = null;
+    }
+
+    @Get('/whoami')
+    async whoami(@Session() session: any) {
+        if(session.userId == null)
+            throw new BadRequestException(`User is not logged in`);
+
+        return await this.userService.findById(session.userId);
+    }
+
     @Patch('/:id')
     async updateUser(@Param('id') id: number, @Body() body: updateUserDto) {
         const user = await this.userService.findById(id)
