@@ -1,12 +1,16 @@
-import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Session, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, Patch, Post, Query, Session, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import createUserDto from 'src/dtos/createUserDto';
 import updateUserDto from 'src/dtos/updateUserDto';
 import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
 import { AuthService } from './auth.service';
 import loginUserDto from 'src/dtos/loginUserDto';
+import { CurrentUser } from './decorators/current-user-decorator';
+import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
+import { AuthGuard } from 'src/guards/AuthGuard';
 
 @Controller('users')
+@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
 
     constructor(private readonly userService: UsersService, private readonly authService: AuthService) {}
@@ -39,11 +43,12 @@ export class UsersController {
     }
 
     @Get('/whoami')
-    async whoami(@Session() session: any) {
-        if(session.userId == null)
+    @UseGuards(AuthGuard)
+    async whoami(@CurrentUser() user: any) {
+        if(!user)
             throw new BadRequestException(`User is not logged in`);
 
-        return await this.userService.findById(session.userId);
+        return await this.userService.findById(user.id);
     }
 
     @Patch('/:id')
