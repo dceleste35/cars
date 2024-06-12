@@ -46,4 +46,11 @@ export class ReportsService {
         .select('*')
         .getRawMany();
     }
+
+    async getSalesStats() {
+        return this.reportRepository.createQueryBuilder()
+        .select('make, COUNT(*)', 'totalSales')
+        .groupBy('make')
+        .getRawMany();
+    }
 }

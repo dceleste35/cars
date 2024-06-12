@@ -16,6 +16,12 @@ export class ReportsController {
 
     constructor(private readonly reportService: ReportsService) {}
 
+    @Get('/sales')
+    @UseGuards(AdminGuard)
+    async getSalesStats() {
+        return this.reportService.getSalesStats();
+    }
+
     @Get('/:id')
     async findById(@Param('id') id: number) {
         const user = await this.reportService.findById(id)
@@ -54,6 +60,4 @@ export class ReportsController {
     async getEstimates(@Query() query: GetEstimateDto) {
         return this.reportService.createEstimate(query);
     }
-
-
 }
