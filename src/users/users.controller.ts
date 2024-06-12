@@ -12,16 +12,22 @@ export class UsersController {
     constructor(private readonly userService: UsersService, private readonly authService: AuthService) {}
 
     @Post('/signup')
-    async signup(@Body() body: createUserDto) {
+    async signup(@Body() body: createUserDto, @Session() session: any) {
         if(await this.userService.findByEmail(body.email))
             throw new BadRequestException(`User with email ${body.email} already exists`);
 
-        return await this.authService.signup(body.email, body.password);
+        const user = await this.authService.signup(body.email, body.password);
+        session.userId = user.id;
+
+        return user;
     }
 
     @Post('/login')
-    async login(@Body() body: loginUserDto) {
-        return await this.authService.login(body);
+    async login(@Body() body: loginUserDto, @Session() session: any){
+        const user = await this.authService.login(body);
+        session.userId = user.id;
+
+        return user;
     }
 
     @Patch('/:id')
