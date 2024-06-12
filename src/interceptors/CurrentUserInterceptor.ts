@@ -3,6 +3,7 @@ import {
     ExecutionContext,
     CallHandler,
     Injectable,
+    NotFoundException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 
@@ -14,10 +15,12 @@ export class CurrentUserInterceptor implements NestInterceptor {
         const request = context.switchToHttp().getRequest();
         const { userId } = request.session || {};
 
-        if (userId) {
-            const user = await this.userService.findById(userId);
-            request.currentUser = user;
+        if (!userId) {
+            throw new NotFoundException("User not logged in");
         }
+
+        const user = await this.userService.findById(userId);
+        request.currentUser = user;
 
         return handler.handle();
     }
