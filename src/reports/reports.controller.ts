@@ -7,6 +7,7 @@ import { CurrentUser } from 'src/users/decorators/current-user-decorator';
 import { User } from 'src/users/users.entity';
 import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
 import { ReportDto } from 'src/dtos/ReportDto';
+import { approuveReportDto } from 'src/dtos/approveReportDto';
 @Controller('reports')
 @UseGuards(AuthGuard)
 export class ReportsController {
@@ -30,6 +31,12 @@ export class ReportsController {
 
         return await this.reportService.update(id, body);
     }
+
+    @Patch('/:id/approve')
+    async approveReport(@Param('id') id: number, @Body() body: approuveReportDto) {
+        return await this.reportService.changeApproval(id, body.approved);
+    }
+
 
     @Post('/create')
     @UseGuards(AuthGuard)
