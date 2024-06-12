@@ -14,6 +14,9 @@ export class User {
     @Exclude()
     password: string;
 
+    @Column({ default: false })
+    admin: boolean;
+
     @OneToMany(() => Report, (report: Report) => report.user)
     reports: Report[];
 

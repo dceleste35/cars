@@ -1,4 +1,4 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import updateReportDto from 'src/dtos/updateReportDto';
 import createReportDto from 'src/dtos/createReportDto';
@@ -8,6 +8,8 @@ import { User } from 'src/users/users.entity';
 import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
 import { ReportDto } from 'src/dtos/ReportDto';
 import { approuveReportDto } from 'src/dtos/approveReportDto';
+import { AdminGuard } from 'src/guards/AdminGuard';
+import { GetEstimateDto } from 'src/dtos/GetEstimateDto';
 @Controller('reports')
 @UseGuards(AuthGuard)
 export class ReportsController {
@@ -33,6 +35,7 @@ export class ReportsController {
     }
 
     @Patch('/:id/approve')
+    @UseGuards(AdminGuard)
     async approveReport(@Param('id') id: number, @Body() body: approuveReportDto) {
         return await this.reportService.changeApproval(id, body.approved);
     }
@@ -46,5 +49,11 @@ export class ReportsController {
 
         return report;
     }
+
+    @Get('/estimates')
+    async getEstimates(@Query() query: GetEstimateDto) {
+        return this.reportService.createEstimate(query);
+    }
+
 
 }
