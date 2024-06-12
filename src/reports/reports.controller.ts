@@ -2,8 +2,11 @@ import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards
 import { ReportsService } from './reports.service';
 import updateReportDto from 'src/dtos/updateReportDto';
 import createReportDto from 'src/dtos/createReportDto';
-import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
 import { AuthGuard } from 'src/guards/AuthGuard';
+import { CurrentUser } from 'src/users/decorators/current-user-decorator';
+import { User } from 'src/users/users.entity';
+import { SerializeInterceptor } from 'src/interceptors/SerializeInterceptor';
+import { ReportDto } from 'src/dtos/ReportDto';
 @Controller('reports')
 @UseGuards(AuthGuard)
 export class ReportsController {
@@ -29,8 +32,10 @@ export class ReportsController {
     }
 
     @Post('/create')
-    async createReport(@Body() body: createReportDto) {
-        const report = await this.reportService.create(body);
+    @UseGuards(AuthGuard)
+    @UseInterceptors(new SerializeInterceptor(ReportDto))
+    async createReport(@Body() body: createReportDto, @CurrentUser() user: User) {
+        const report = await this.reportService.create(body, user);
 
         return report;
     }

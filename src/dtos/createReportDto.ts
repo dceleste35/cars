@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsEmail, IsHash, Max, Min, IsDecimal, IsLatitude, IsLongitude, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsHash, Max, Min, IsDecimal, IsLatitude, IsLongitude, IsInt, IsOptional } from 'class-validator';
+import { User } from 'src/users/users.entity';
 
 export default class createReportDto {
     @IsInt()

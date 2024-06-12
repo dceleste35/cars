@@ -8,6 +8,7 @@ import loginUserDto from 'src/dtos/loginUserDto';
 import { CurrentUser } from './decorators/current-user-decorator';
 import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
 import { AuthGuard } from 'src/guards/AuthGuard';
+import { UserDTO } from 'src/dtos/UserDto';
 
 @Controller('users')
 export class UsersController {
@@ -60,7 +61,7 @@ export class UsersController {
     }
 
     @Get('/:id')
-    @UseInterceptors(SerializeInterceptor)
+    @UseInterceptors(new SerializeInterceptor(UserDTO))
     async findById(@Param('id') id: number) {
         const user = await this.userService.findById(id)
         if(!user)
@@ -70,7 +71,7 @@ export class UsersController {
     }
 
     @Get('/')
-    @UseInterceptors(SerializeInterceptor)
+    @UseInterceptors(new SerializeInterceptor(UserDTO))
     async find(@Query('email') email: string) {
         if(email) {
             var user = await this.userService.findByEmail(email);
