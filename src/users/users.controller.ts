@@ -10,7 +10,6 @@ import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor'
 import { AuthGuard } from 'src/guards/AuthGuard';
 
 @Controller('users')
-@UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
 
     constructor(private readonly userService: UsersService, private readonly authService: AuthService) {}

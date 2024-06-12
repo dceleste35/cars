@@ -1,9 +1,11 @@
-import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, NotFoundException, Param, Patch, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import updateReportDto from 'src/dtos/updateReportDto';
 import createReportDto from 'src/dtos/createReportDto';
 import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
+import { AuthGuard } from 'src/guards/AuthGuard';
 @Controller('reports')
+@UseGuards(AuthGuard)
 export class ReportsController {
 
     constructor(private readonly reportService: ReportsService) {}
